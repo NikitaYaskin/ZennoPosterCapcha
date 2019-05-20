@@ -9,14 +9,19 @@ def currentDateTime():
 		unix).strftime('%d-%m-%y %H:%M:%S'))
 	return now
 
+def convertIfInteger(string):
+    try:
+        return int(string)
+    except ValueError:
+        return string
 
 def findingImage():
         data = {}
         images = os.listdir("img/")
         for image in images:
             res = image.split('.')
-            key = int(res[0])
-            data[res[0]] = str('img/') + image
+            key = convertIfInteger(res[0])
+            data[key] = str('img/') + image
         logging.info('Всі файли у папці img \n{}'.format(data))
         return data
 
@@ -33,7 +38,7 @@ enter = (828, 621) # Місцезнаходження клавіші ентер
 
 while True:
     if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
-        for el in data:
+        for el in data[1:9]:
             if pyautogui.locateOnScreen(data[el], region=windowLocation, grayscale=True):
                 info[el] = pyautogui.locateCenterOnScreen(data[el], region=windowLocation, grayscale=True)
                 logging.info('Знайдено цифру {0}'.format(info[el]))
