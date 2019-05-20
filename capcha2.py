@@ -9,7 +9,6 @@ def currentDateTime():
 		unix).strftime('%d-%m-%y %H:%M:%S'))
 	return now
 
-logging.info('Завантаження програми \n{}'.format(currentDateTime()))
 
 def findingImage():
         data = {}
@@ -27,11 +26,12 @@ dateInfo = []
 info = {}
 data = findingImage()
 
+logging.info('Завантаження програми \n{}'.format(currentDateTime()))
+
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
 enter = (828, 621) # Місцезнаходження клавіші ентер
 
 while True:
-
     if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
         for el in data:
             if pyautogui.locateOnScreen(data[el], region=windowLocation, grayscale=True):
@@ -39,13 +39,14 @@ while True:
                 logging.info('Знайдено цифру {0}'.format(info[el]))
                 
         sortedInfo = sorted(info)
-        
-        if len(sortedInfo) != []:
-        	pyautogui.moveTo(info[sortedInfo[0]][0], info[sortedInfo[0]][1])
-        elif len(sortedInfo) >= 0 and len(sortedInfo) <= 3:
+             
+        if len(sortedInfo) >= 0 and len(sortedInfo) <= 3:
                 pyautogui.alert('Недoстатня кількість цифр')
                 break
 
+        elif len(sortedInfo) != []:
+            pyautogui.moveTo(info[sortedInfo[0]][0], info[sortedInfo[0]][1]) 	
+        
         pyautogui.mouseDown()
         
         logging.info('Затиснута ліва клавіша миші {0}'.format(currentDateTime()))
