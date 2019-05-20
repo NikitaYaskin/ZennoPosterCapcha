@@ -1,4 +1,6 @@
-import pyautogui, time, datetime, logging
+import pyautogui, time, datetime, logging, os
+
+logging.basicConfig(filename='capcha.log',level=logging.DEBUG)
 
 def currentDateTime():
 	'''Informathon about date time'''
@@ -7,21 +9,30 @@ def currentDateTime():
 		unix).strftime('%d-%m-%y %H:%M:%S'))
 	return now
 
-logging.basicConfig(filename='capcha.log',level=logging.DEBUG)
 logging.info('Завантаження програми \n{}'.format(currentDateTime()))
+
+def findingImage():
+        data = {}
+        images = os.listdir("img/")
+        for image in images:
+            res = image.split('.')
+            key = int(res[0])
+            data[res[0]] = str('img/') + image
+        logging.info('Всі файли у папці img \n{}'.format(data))
+        return data
 
 numCapcha = 0
 faildCapcha = 0
 dateInfo = []
+info = {}
+data = findingImage()
 
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
+enter = (828, 621) # Місцезнаходження клавіші ентер
 
 while True:
-    info = {}
-    data = {1: 'img/1.png', 2: 'img/2.png', 3: 'img/3.png', 4: 'img/4.png',
-            5: 'img/5.png', 6: 'img/6.png', 7: 'img/7.png', 8: 'img/8.png', 9: 'img/9.png'}
 
-    if pyautogui.locateOnScreen('img/title.png', region=windowLocation, grayscale=True):
+    if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
         for el in data:
             if pyautogui.locateOnScreen(data[el], region=windowLocation, grayscale=True):
                 info[el] = pyautogui.locateCenterOnScreen(data[el], region=windowLocation, grayscale=True)
@@ -29,8 +40,11 @@ while True:
                 
         sortedInfo = sorted(info)
         
-        if sortedInfo != []:
+        if len(sortedInfo) != []:
         	pyautogui.moveTo(info[sortedInfo[0]][0], info[sortedInfo[0]][1])
+        elif len(sortedInfo) >= 0 and len(sortedInfo) <= 3:
+                pyautogui.alert('Недoстатня кількість цифр')
+                break
 
         pyautogui.mouseDown()
         
@@ -41,14 +55,14 @@ while True:
             logging.info('Курсор рухається до точки {0}'.format(key))
             
         pyautogui.mouseUp()
-        logging.info('Відпущена ліва клавіша миші {0}'.format(currentDateTime()))
+        logging.info('Відпущена ліва клавіша миші')
         
-        pyautogui.click(828, 621) #click enter
-        logging.info('Натиснутий Enter {0}'.format(currentDateTime()))
+        pyautogui.click(enter)
+        logging.info('Натиснутий Enter')
 
-        time.sleep(3)
+        time.sleep(2)
 
-        if pyautogui.locateOnScreen('img/title.png', region=windowLocation, grayscale=True):
+        if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
                 faildCapcha += 1
                 logging.warning('Капча {0} не введена'.format(faildCapcha))
                 #faildCapchaName = 'faildCapcha/' + str(currentDateTime()) + '.png'
@@ -60,7 +74,3 @@ while True:
         	time.sleep(60)
         	continue
 
-'''	Перевірка на те чи є 4 елемента в словнику.
-	Перевірка на те чи зник титул після введення капчі.+
-	
-'''
