@@ -1,20 +1,19 @@
 import pyautogui, time, datetime, logging
 
-logging.basicConfig(filename='capcha.log',level=logging.DEBUG)
-
-logging.info('Завантаження програми')
-
-def dataInfo():
+def currentDateTime():
 	'''Informathon about date time'''
 	unix = int(time.time())
 	now = str(datetime.datetime.fromtimestamp(
 		unix).strftime('%d-%m-%y %H:%M:%S'))
 	return now
 
+logging.basicConfig(filename='capcha.log',level=logging.DEBUG)
+logging.info('Завантаження програми \n{}'.format(currentDateTime()))
+
 numCapcha = 0
+faildCapcha = 0
 dateInfo = []
 
-logging.info('Програма запущена {0}'.format(dataInfo()))
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
 
 while True:
@@ -35,28 +34,29 @@ while True:
 
         pyautogui.mouseDown()
         
-        logging.info('Затиснута ліва клавіша миші {0}'.format(dataInfo()))
+        logging.info('Затиснута ліва клавіша миші {0}'.format(currentDateTime()))
 
         for key in sorted(info):
             pyautogui.moveTo(x=info[key][0], y=info[key][1])
             logging.info('Курсор рухається до точки {0}'.format(key))
             
         pyautogui.mouseUp()
-        logging.info('Відпущена ліва клавіша миші {0}'.format(dataInfo()))
+        logging.info('Відпущена ліва клавіша миші {0}'.format(currentDateTime()))
         
         pyautogui.click(828, 621) #click enter
-        logging.info('Натиснутий Enter {0}'.format(dataInfo()))
+        logging.info('Натиснутий Enter {0}'.format(currentDateTime()))
 
         time.sleep(3)
 
         if pyautogui.locateOnScreen('img/title.png', region=windowLocation, grayscale=True):
-                logging.warning('Капча не введена')
-                time.sleep(10)
+                faildCapcha += 1
+                logging.warning('Капча {0} не введена'.format(faildCapcha))
+                #faildCapchaName = 'faildCapcha/' + str(currentDateTime()) + '.png'
+                #pyautogui.screenshot(faildCapchaName, region=windowLocation)
                 continue
         else:
         	numCapcha += 1
-        	logging.info('Натиснутий Enter. Введено {0} капч. {1}'.format(numCapcha,dataInfo()))
-        	#pyautogui.alert('Введена капча {0}'.format(numCapcha))
+        	logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha,currentDateTime()))
         	time.sleep(60)
         	continue
 
