@@ -50,11 +50,13 @@ logging.info('Завантаження програми \n{}'.format(currentDate
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
 enter = (828, 621) # Місцезнаходження клавіші ентер
 
-def faildCapcha():
-        faildCapchaName = 'faildCapcha\\' + currentDateTime() + '.png'
+def faildCapcha(info):
+        faildCapcha += 1
+        faildCapchaName = 'faildCapcha/'+ str(info) + ' ' + str(faildCapcha) + '.png'
         pyautogui.screenshot(faildCapchaName, region=windowLocation)
         faildCapcha += 1
         logging.warning('Капча {0} не введена'.format(faildCapcha))
+        time.sleep(20)
 
 while True:
     if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
@@ -67,8 +69,8 @@ while True:
              
         if len(sortedInfo) >= 0 and len(sortedInfo) <= 3:
                 pyautogui.alert('Недoстатня кількість цифр')
-                faildCapcha()
-                time.sleep(5)
+                logging.warning('Недoстатня кількість цифр')
+                faildCapcha(sortedInfo)
                 continue
 
         elif len(sortedInfo) != []:
@@ -91,7 +93,7 @@ while True:
         time.sleep(2)
 
         if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
-                faildCapcha()
+                faildCapcha(sortedInfo)
                 continue
         else:
         	numCapcha += 1
