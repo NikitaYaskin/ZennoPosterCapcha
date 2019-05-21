@@ -10,10 +10,16 @@ def currentDateTime():
 	return now
 
 def convertIfInteger(string):
-    try:
-        return int(string)
-    except ValueError:
-        return string
+        try:
+                return int(string)
+        except ValueError:
+                return string
+
+def leftOnlyDigits(digits):
+        try:
+                return int(digits)
+        except ValueError:
+                pass
 
 def findingImage():
         data = {}
@@ -25,29 +31,45 @@ def findingImage():
         logging.info('Всі файли у папці img \n{}'.format(data))
         return data
 
+def formatAllKeys(data):
+        result = list()
+        for item in data:
+                if leftOnlyDigits(item) != None:
+                        result.append(leftOnlyDigits(item))
+        return result
+
 numCapcha = 0
 faildCapcha = 0
 dateInfo = []
 info = {}
 data = findingImage()
+digitsOnScreen = formatAllKeys(data)
 
 logging.info('Завантаження програми \n{}'.format(currentDateTime()))
 
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
 enter = (828, 621) # Місцезнаходження клавіші ентер
 
+def faildCapcha():
+        faildCapchaName = 'faildCapcha\\' + currentDateTime() + '.png'
+        pyautogui.screenshot(faildCapchaName, region=windowLocation)
+        faildCapcha += 1
+        logging.warning('Капча {0} не введена'.format(faildCapcha))
+
 while True:
     if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
-        for el in data[1:9]:
-            if pyautogui.locateOnScreen(data[el], region=windowLocation, grayscale=True):
-                info[el] = pyautogui.locateCenterOnScreen(data[el], region=windowLocation, grayscale=True)
-                logging.info('Знайдено цифру {0}'.format(info[el]))
+        for digit in digitsOnScreen:
+            if pyautogui.locateOnScreen(data[digit], region=windowLocation, grayscale=True):
+                info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=windowLocation, grayscale=True)
+                logging.info('Знайдено цифру {0}'.format(info[digit]))
                 
         sortedInfo = sorted(info)
              
         if len(sortedInfo) >= 0 and len(sortedInfo) <= 3:
                 pyautogui.alert('Недoстатня кількість цифр')
-                break
+                faildCapcha()
+                time.sleep(5)
+                continue
 
         elif len(sortedInfo) != []:
             pyautogui.moveTo(info[sortedInfo[0]][0], info[sortedInfo[0]][1]) 	
@@ -69,14 +91,10 @@ while True:
         time.sleep(2)
 
         if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
-                faildCapcha += 1
-                logging.warning('Капча {0} не введена'.format(faildCapcha))
-                #faildCapchaName = 'faildCapcha/' + str(currentDateTime()) + '.png'
-                #pyautogui.screenshot(faildCapchaName, region=windowLocation)
+                faildCapcha()
                 continue
         else:
         	numCapcha += 1
         	logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha,currentDateTime()))
         	time.sleep(60)
         	continue
-
