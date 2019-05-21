@@ -28,7 +28,7 @@ def findingImage():
             res = image.split('.')
             key = convertIfInteger(res[0])
             data[key] = str('img/') + image
-        logging.info('Всі файли у папці img \n{}'.format(data))
+        logging.info('Всі файли у папці img \n{}'.format(data.values()))
         return data
 
 def formatAllKeys(data):
@@ -39,7 +39,7 @@ def formatAllKeys(data):
         return result
 
 numCapcha = 0
-faildCapcha = 0
+numFaildCapchas = 0
 dateInfo = []
 info = {}
 data = findingImage()
@@ -51,11 +51,9 @@ windowLocation = (670, 380, 330, 270) #Записати місцезнаходж
 enter = (828, 621) # Місцезнаходження клавіші ентер
 
 def faildCapcha(info):
-        faildCapcha += 1
-        faildCapchaName = 'faildCapcha/'+ str(info) + ' ' + str(faildCapcha) + '.png'
+        faildCapchaName = 'faildCapcha/'+ str(info) + '.png'
         pyautogui.screenshot(faildCapchaName, region=windowLocation)
-        faildCapcha += 1
-        logging.warning('Капча {0} не введена'.format(faildCapcha))
+        logging.warning('Капча не введена {}'.format(currentDateTime()))
         time.sleep(20)
 
 while True:
@@ -97,6 +95,6 @@ while True:
                 continue
         else:
         	numCapcha += 1
-        	logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha,currentDateTime()))
+        	logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha, currentDateTime()))
         	time.sleep(60)
         	continue
