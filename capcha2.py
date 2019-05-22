@@ -38,7 +38,8 @@ def formatAllKeys(data):
                         result.append(leftOnlyDigits(item))
         return result
 
-
+numCapcha = 0
+numFaildCapchas = 0
 data = findingImage()
 digitsOnScreen = formatAllKeys(data)
 
@@ -54,8 +55,6 @@ def faildCapcha(info):
         time.sleep(5)
 
 while True:
-        numCapcha = 0
-        numFaildCapchas = 0
         dateInfo = []
         info = {}
         if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
@@ -85,6 +84,8 @@ while True:
 
                 pyautogui.mouseUp()
                 logging.info('Відпущена ліва клавіша миші')
+                capcha = 'success/' + str(info.keys()) + '.png'
+                pyautogui.screenshot(capcha, region=windowLocation)
 
                 pyautogui.click(enter)
                 logging.info('Натиснутий Enter')
