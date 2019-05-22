@@ -1,4 +1,4 @@
-import pyautogui, time, datetime, logging, os
+import pyautogui, time, datetime, logging, os, pdb
 
 logging.basicConfig(filename='capcha.log',level=logging.DEBUG)
 
@@ -38,10 +38,7 @@ def formatAllKeys(data):
                         result.append(leftOnlyDigits(item))
         return result
 
-numCapcha = 0
-numFaildCapchas = 0
-dateInfo = []
-info = {}
+
 data = findingImage()
 digitsOnScreen = formatAllKeys(data)
 
@@ -57,45 +54,47 @@ def faildCapcha(info):
         time.sleep(5)
 
 while True:
-    if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
-        for digit in digitsOnScreen:
-            if pyautogui.locateOnScreen(data[digit], region=windowLocation, grayscale=True):
-                    info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=windowLocation, grayscale=True)
-                    logging.info('Знайдено цифру {0}'.format(info[digit]))
-                
-        sortedInfo = sorted(info)
-             
-        if len(sortedInfo) >= 0 and len(sortedInfo) <= 3 or len(sortedInfo) > 4:
-                pyautogui.alert('Неправильна кількість цифр \n {}'.format(sortedInfo))
-                logging.warning('Неправильна кількість цифр')
-                logging.warning('{}'.format(sortedInfo))
-                faildCapcha(sortedInfo)
-                continue
-
-        elif len(sortedInfo) != []:
-            pyautogui.moveTo(info[sortedInfo[0]][0], info[sortedInfo[0]][1]) 	
-        
-        pyautogui.mouseDown()
-        
-        logging.info('Затиснута ліва клавіша миші {0}'.format(currentDateTime()))
-
-        for key in sorted(info):
-            pyautogui.moveTo(x=info[key][0], y=info[key][1])
-            logging.info('Курсор рухається до точки {0}'.format(key))
-            
-        pyautogui.mouseUp()
-        logging.info('Відпущена ліва клавіша миші')
-        
-        pyautogui.click(enter)
-        logging.info('Натиснутий Enter')
-
-        time.sleep(2)
-
+        numCapcha = 0
+        numFaildCapchas = 0
+        dateInfo = []
+        info = {}
         if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
-                faildCapcha(sortedInfo)
-                continue
-        else:
-        	numCapcha += 1
-        	logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha, currentDateTime()))
-        	time.sleep(60)
-        	continue
+                for digit in digitsOnScreen:
+                        if pyautogui.locateOnScreen(data[digit], region=windowLocation, grayscale=True):
+                                info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=windowLocation, grayscale=True)
+                                logging.info('Знайдено цифру {0}'.format(info[digit]))
+
+                sortedInfo = sorted(info)
+
+                if len(sortedInfo) >= 0 and len(sortedInfo) <= 3 or len(sortedInfo) > 4:
+                        pyautogui.alert('Неправильна кількість цифр \n {}'.format(sortedInfo))
+                        logging.warning('Неправильна кількість цифр')
+                        logging.warning('{}'.format(sortedInfo))
+                        faildCapcha(sortedInfo)
+                        continue
+                elif len(sortedInfo) != []:
+                        pyautogui.moveTo(info[sortedInfo[0]][0], info[sortedInfo[0]][1])
+
+                pyautogui.mouseDown()
+
+                logging.info('Затиснута ліва клавіша миші {0}'.format(currentDateTime()))
+
+                for key in sorted(info):
+                        pyautogui.moveTo(x=info[key][0], y=info[key][1])
+                        logging.info('Курсор рухається до точки {0}'.format(key))
+
+                pyautogui.mouseUp()
+                logging.info('Відпущена ліва клавіша миші')
+
+                pyautogui.click(enter)
+                logging.info('Натиснутий Enter')
+                time.sleep(2)
+
+                if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
+                        faildCapcha(sortedInfo)
+                        continue
+                else:
+                        numCapcha += 1
+                        logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha, currentDateTime()))
+                        time.sleep(60)
+                        continue
