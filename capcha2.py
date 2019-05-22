@@ -45,7 +45,7 @@ info = {}
 data = findingImage()
 digitsOnScreen = formatAllKeys(data)
 
-logging.info('Завантаження програми \n{}'.format(currentDateTime()))
+logging.info('Завантаження програми \n {}'.format(currentDateTime()))
 
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
 enter = (828, 621) # Місцезнаходження клавіші ентер
@@ -54,20 +54,21 @@ def faildCapcha(info):
         faildCapchaName = 'faildCapcha/'+ str(info) + '.png'
         pyautogui.screenshot(faildCapchaName, region=windowLocation)
         logging.warning('Капча не введена {}'.format(currentDateTime()))
-        time.sleep(20)
+        time.sleep(5)
 
 while True:
     if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
         for digit in digitsOnScreen:
             if pyautogui.locateOnScreen(data[digit], region=windowLocation, grayscale=True):
-                info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=windowLocation, grayscale=True)
-                logging.info('Знайдено цифру {0}'.format(info[digit]))
+                    info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=windowLocation, grayscale=True)
+                    logging.info('Знайдено цифру {0}'.format(info[digit]))
                 
         sortedInfo = sorted(info)
              
-        if len(sortedInfo) >= 0 and len(sortedInfo) <= 3:
-                pyautogui.alert('Недoстатня кількість цифр')
-                logging.warning('Недoстатня кількість цифр')
+        if len(sortedInfo) >= 0 and len(sortedInfo) <= 3 or len(sortedInfo) > 4:
+                pyautogui.alert('Неправильна кількість цифр \n {}'.format(sortedInfo))
+                logging.warning('Неправильна кількість цифр')
+                logging.warning('{}'.format(sortedInfo))
                 faildCapcha(sortedInfo)
                 continue
 
