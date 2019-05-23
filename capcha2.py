@@ -46,21 +46,22 @@ digitsOnScreen = formatAllKeys(data)
 logging.info('Завантаження програми \n {}'.format(currentDateTime()))
 
 windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
+digitLocation = (691, 457, 300, 146) # Розміщення цифр в вікні.
 enter = (828, 621) # Місцезнаходження клавіші ентер
 
 def faildCapcha(info):
         faildCapchaName = 'faildCapcha/'+ str(info) + '.png'
         pyautogui.screenshot(faildCapchaName, region=windowLocation)
         logging.warning('Капча не введена {}'.format(currentDateTime()))
-        time.sleep(5)
+        time.sleep(0.5)
 
 while True:
         dateInfo = []
         info = {}
         if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
                 for digit in digitsOnScreen:
-                        if pyautogui.locateOnScreen(data[digit], region=windowLocation, grayscale=True):
-                                info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=windowLocation, grayscale=True)
+                        if pyautogui.locateOnScreen(data[digit], region=digitLocation, grayscale=True):
+                                info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=digitLocation, grayscale=True)
                                 logging.info('Знайдено цифру {0}'.format(info[digit]))
 
                 sortedInfo = sorted(info)
@@ -97,5 +98,5 @@ while True:
                 else:
                         numCapcha += 1
                         logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha, currentDateTime()))
-                        time.sleep(60)
+                        time.sleep(30)
                         continue
