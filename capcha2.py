@@ -53,7 +53,6 @@ def faildCapcha(info):
         faildCapchaName = 'faildCapcha/'+ str(info) + '.png'
         pyautogui.screenshot(faildCapchaName, region=windowLocation)
         logging.warning('Капча не введена {}'.format(currentDateTime()))
-        time.sleep(0.5)
 
 while True:
         dateInfo = []
@@ -84,13 +83,17 @@ while True:
                         logging.info('Курсор рухається до точки {0}'.format(key))
 
                 pyautogui.mouseUp()
+                
                 logging.info('Відпущена ліва клавіша миші')
-                capcha = 'success/' + str(info.keys()) + '.png'
+                
+                capcha = 'success/' + str(datetime.date.today()) + ' ' + str(info.keys()) + '.png'
                 pyautogui.screenshot(capcha, region=windowLocation)
-
+                
+                logging.info('Зроблено скріншот')
+                
                 pyautogui.click(enter)
                 logging.info('Натиснутий Enter')
-                time.sleep(2)
+                time.sleep(1)
 
                 if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
                         faildCapcha(sortedInfo)
