@@ -45,7 +45,7 @@ digitsOnScreen = formatAllKeys(data)
 
 logging.info('Завантаження програми \n {}'.format(currentDateTime()))
 
-windowLocation = (670, 380, 330, 270) #Записати місцезнаходження вікна. Чим більш точно визначено вікно тим швидше буде працювати програма
+windowLocation = (670, 380, 330, 270) 
 digitLocation = (691, 457, 300, 146) # Розміщення цифр в вікні.
 enter = (828, 621) # Місцезнаходження клавіші ентер
 
