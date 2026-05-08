@@ -46,8 +46,8 @@ digitsOnScreen = formatAllKeys(data)
 logging.info('Завантаження програми \n {}'.format(currentDateTime()))
 
 windowLocation = (670, 380, 330, 270) 
-digitLocation = (691, 457, 300, 146) # Розміщення цифр в вікні.
-enter = (828, 621) # Місцезнаходження клавіші ентер
+digitLocation = (691, 457, 300, 146) # Placing numbers in the window.
+enter = (828, 621) # Location of the enter key
 
 def faildCapcha(info):
         faildCapchaName = 'faildCapcha/'+ str(info) + '.png'
