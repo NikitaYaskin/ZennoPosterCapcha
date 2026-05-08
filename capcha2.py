@@ -28,7 +28,7 @@ def findingImage():
             res = image.split('.')
             key = convertIfInteger(res[0])
             data[key] = str('img/') + image
-        logging.info('Всі файли у папці img \n{}'.format(data.values()))
+        logging.info('All files in the img folder\n{}'.format(data.values()))
         return data
 
 def formatAllKeys(data):
@@ -43,7 +43,7 @@ numFaildCapchas = 0
 data = findingImage()
 digitsOnScreen = formatAllKeys(data)
 
-logging.info('Завантаження програми \n {}'.format(currentDateTime()))
+logging.info('Downloading the program\n {}'.format(currentDateTime()))
 
 windowLocation = (670, 380, 330, 270) 
 digitLocation = (691, 457, 300, 146) # Placing numbers in the window.
@@ -52,7 +52,7 @@ enter = (828, 621) # Location of the enter key
 def faildCapcha(info):
         faildCapchaName = 'faildCapcha/'+ str(info) + '.png'
         pyautogui.screenshot(faildCapchaName, region=windowLocation)
-        logging.warning('Капча не введена {}'.format(currentDateTime()))
+        logging.warning('Captcha not entered {}'.format(currentDateTime()))
 
 while True:
         dateInfo = []
@@ -61,13 +61,13 @@ while True:
                 for digit in digitsOnScreen:
                         if pyautogui.locateOnScreen(data[digit], region=digitLocation, grayscale=True):
                                 info[digit] = pyautogui.locateCenterOnScreen(data[digit], region=digitLocation, grayscale=True)
-                                logging.info('Знайдено цифру {0}'.format(info[digit]))
+                                logging.info('Number found {0}'.format(info[digit]))
 
                 sortedInfo = sorted(info)
 
                 if len(sortedInfo) >= 0 and len(sortedInfo) <= 3 or len(sortedInfo) > 4:
-                        pyautogui.alert('Неправильна кількість цифр \n {}'.format(sortedInfo))
-                        logging.warning('Неправильна кількість цифр')
+                        pyautogui.alert('Incorrect number of digits \n {}'.format(sortedInfo))
+                        logging.warning('Incorrect number of digits')
                         logging.warning('{}'.format(sortedInfo))
                         faildCapcha(sortedInfo)
                         continue
@@ -76,23 +76,23 @@ while True:
 
                 pyautogui.mouseDown()
 
-                logging.info('Затиснута ліва клавіша миші {0}'.format(currentDateTime()))
+                logging.info('Left mouse button pressed {0}'.format(currentDateTime()))
 
                 for key in sorted(info):
                         pyautogui.moveTo(x=info[key][0], y=info[key][1])
-                        logging.info('Курсор рухається до точки {0}'.format(key))
+                        logging.info('The cursor moves to the point {0}'.format(key))
 
                 pyautogui.mouseUp()
                 
-                logging.info('Відпущена ліва клавіша миші')
+                logging.info('Left mouse button released')
                 
                 capcha = 'success/' + str(datetime.date.today()) + ' ' + str(info.keys()) + '.png'
                 pyautogui.screenshot(capcha, region=windowLocation)
                 
-                logging.info('Зроблено скріншот')
+                logging.info('Screenshot taken')
                 
                 pyautogui.click(enter)
-                logging.info('Натиснутий Enter')
+                logging.info('Pressed Enter')
                 time.sleep(1)
 
                 if pyautogui.locateOnScreen(data['title'], region=windowLocation, grayscale=True):
@@ -100,6 +100,6 @@ while True:
                         continue
                 else:
                         numCapcha += 1
-                        logging.info('Натиснутий Enter. \nВведено {0} капч. {1}'.format(numCapcha, currentDateTime()))
+                        logging.info('Pressed Enter. \nEntered {0} captchas. {1}'.format(numCapcha, currentDateTime()))
                         time.sleep(30)
                         continue
